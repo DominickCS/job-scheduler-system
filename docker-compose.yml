@@ -1,5 +1,6 @@
 networks:
   psql:
+    driver: bridge
   redis:
 
 services:
