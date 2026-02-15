@@ -11,7 +11,7 @@ import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "jobs")
+@Table
 @Data
 public class Job {
   @Id
@@ -29,4 +29,5 @@ public class Job {
   private long successCounter;
   private long failureCounter;
   private String lastErrorMessage;
+  private String parameters;
 }

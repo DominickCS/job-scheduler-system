@@ -7,4 +7,17 @@ spring:
     password: ${DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto:
+      ddl-auto: update
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${EMAIL_USERNAME}
+    password: ${EMAIL_PASSWORD}
+    ssl:
+      enabled: true
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
