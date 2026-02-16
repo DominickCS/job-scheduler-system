@@ -30,8 +30,10 @@ public class ScheduleService {
   @Transactional
   public void processJobs() {
     List<Job> jobsToExecute = jobRepository.findJobsDueForExecution(LocalDateTime.now(), JobStatus.SCHEDULED);
+    System.out.println("Found " + jobsToExecute.size() + " jobs to execute");
 
     for (Job job : jobsToExecute) {
+      System.out.println("Executing job: " + job.getJobName());
       executeJob(job);
     }
   }
