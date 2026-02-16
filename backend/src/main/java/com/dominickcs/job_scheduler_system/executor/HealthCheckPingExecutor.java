@@ -21,6 +21,7 @@ public class HealthCheckPingExecutor implements JobExecutor {
 
   private ObjectMapper objectMapper;
 
+  // Configure and build the HTTP Client used to make requests
   private final HttpClient httpClient = HttpClient.newBuilder()
       .version(Version.HTTP_1_1)
       .followRedirects(Redirect.NORMAL)
@@ -32,16 +33,20 @@ public class HealthCheckPingExecutor implements JobExecutor {
 
   @Override
   public JobExecutorResult execute(Job job) {
+    // Capture current time in ms for execution time calculation
     long startTime = System.currentTimeMillis();
     try {
       HealthCheckParameters healthCheckParameters = objectMapper.readValue(job.getParameters(),
           HealthCheckParameters.class);
+      // Configure and build the HTTP request given the mapped job parameters
       HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(healthCheckParameters.getUrl()))
           .timeout(java.time.Duration.ofSeconds(healthCheckParameters.getTimeoutSeconds())).build();
       HttpResponse<String> httpResponse = httpClient.send(request, BodyHandlers.ofString());
+      // Calculate the method execution time in ms
       long executionTimeMs = System.currentTimeMillis() - startTime;
 
       int statusCode = httpResponse.statusCode();
+      // Return results
       if (statusCode == healthCheckParameters.getExpectedStatus()) {
         return new JobExecutorResult(true, "Health Check Passed! Status Returned: " + httpResponse.statusCode(),
             executionTimeMs);

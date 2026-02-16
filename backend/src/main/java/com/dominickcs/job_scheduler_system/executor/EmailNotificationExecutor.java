@@ -29,20 +29,26 @@ public class EmailNotificationExecutor implements JobExecutor {
 
   @Override
   public JobExecutorResult execute(Job job) {
+    // Capture current time in ms for execution time calculation
     long startTime = System.currentTimeMillis();
     try {
       EmailParameters emailParameters = objectMapper.readValue(job.getParameters(), EmailParameters.class);
 
+      // Configure a MimeMessage and set parameters from job parameter values
       MimeMessage message = mailSender.createMimeMessage();
       message.setFrom(emailParameters.getFrom());
       message.addRecipients(Message.RecipientType.TO, emailParameters.getTo());
       message.setSubject(emailParameters.getSubject());
       message.setSentDate(new Date());
       message.setText(emailParameters.getBody());
+
+      // Send the email message
       mailSender.send(message);
 
+      // Calculate the execution time in ms
       long executionTime = System.currentTimeMillis() - startTime;
 
+      // Return results
       return new JobExecutorResult(true, "Email was sent successfully!", executionTime);
 
     } catch (MessagingException messagingException) {
