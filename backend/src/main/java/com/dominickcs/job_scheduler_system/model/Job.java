@@ -46,7 +46,7 @@ public class Job {
   private LocalDateTime lastExecutionTime;
   private LocalDateTime nextExecutionTime;
   @OneToMany(mappedBy = "job")
-  private List<JobExecution> jobExecution;
+  private List<JobExecution> jobExecutions;
 
   @PrePersist
   protected void onCreate() {

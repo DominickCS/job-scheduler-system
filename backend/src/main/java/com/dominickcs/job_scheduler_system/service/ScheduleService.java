@@ -74,6 +74,7 @@ public class ScheduleService {
       jobExecution.setEndTime(LocalDateTime.now());
       jobExecution.setDurationMs(result.getExecutionTimeMs());
       jobExecution.setStatus(JobExecutionStatus.FAILURE);
+      jobExecution.setErrorMessage(result.getMessage());
       job.setJobStatus(JobStatus.FAILED);
       job.setLastErrorMessage(result.getMessage());
       job.setFailureCounter(job.getFailureCounter() + 1);
