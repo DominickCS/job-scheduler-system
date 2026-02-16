@@ -11,6 +11,7 @@ import com.dominickcs.job_scheduler_system.config.DotEnvConfig;
 import com.dominickcs.job_scheduler_system.model.Job;
 import com.dominickcs.job_scheduler_system.model.JobStatus;
 import com.dominickcs.job_scheduler_system.model.JobType;
+import com.dominickcs.job_scheduler_system.model.ScheduleType;
 import com.dominickcs.job_scheduler_system.repository.JobRepository;
 import com.dominickcs.job_scheduler_system.service.ScheduleService;
 
@@ -36,6 +37,7 @@ class CreateTestJob {
     job.setEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
     job.setNextExecutionTime(LocalDateTime.now().minusMinutes(1));
+    job.setScheduleType(ScheduleType.ONE_TIME);
     jobRepository.save(job);
 
     scheduleService.processJobs();
@@ -53,6 +55,8 @@ class CreateTestJob {
     job.setEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
     job.setNextExecutionTime(LocalDateTime.now().minusMinutes(1));
+    job.setScheduleType(ScheduleType.FIXED_DELAY);
+    job.setFixedDelay(5000L);
     jobRepository.save(job);
 
     scheduleService.processJobs();
