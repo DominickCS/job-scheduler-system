@@ -1,6 +1,7 @@
 package com.dominickcs.job_scheduler_system.model;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.annotation.Nullable;
 import jakarta.persistence.Entity;
@@ -9,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -43,6 +45,8 @@ public class Job {
   @Nullable
   private LocalDateTime lastExecutionTime;
   private LocalDateTime nextExecutionTime;
+  @OneToMany(mappedBy = "job")
+  private List<JobExecution> jobExecution;
 
   @PrePersist
   protected void onCreate() {

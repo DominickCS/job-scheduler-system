@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import com.dominickcs.job_scheduler_system.executor.JobExecutorRegistry;
 import com.dominickcs.job_scheduler_system.executor.JobExecutorResult;
 import com.dominickcs.job_scheduler_system.model.Job;
+import com.dominickcs.job_scheduler_system.model.JobExecution;
+import com.dominickcs.job_scheduler_system.model.JobExecutionStatus;
 import com.dominickcs.job_scheduler_system.model.JobStatus;
+import com.dominickcs.job_scheduler_system.repository.JobExecutionRepository;
 import com.dominickcs.job_scheduler_system.repository.JobRepository;
 
 import jakarta.transaction.Transactional;
@@ -20,10 +23,13 @@ import jakarta.transaction.Transactional;
 public class ScheduleService {
   private final JobRepository jobRepository;
   private final JobExecutorRegistry jExecutorRegistry;
+  private final JobExecutionRepository jExecutionRepository;
 
-  public ScheduleService(JobRepository jobRepository, JobExecutorRegistry jExecutorRegistry) {
+  public ScheduleService(JobRepository jobRepository, JobExecutorRegistry jExecutorRegistry,
+      JobExecutionRepository jExecutionRepository) {
     this.jobRepository = jobRepository;
     this.jExecutorRegistry = jExecutorRegistry;
+    this.jExecutionRepository = jExecutionRepository;
   }
 
   @Scheduled(fixedDelay = 30000)
@@ -39,12 +45,16 @@ public class ScheduleService {
   }
 
   public void executeJob(Job job) {
+    JobExecution jobExecution = new JobExecution();
+    jobExecution.setJobId(job);
+    jobExecution.setStartTime(LocalDateTime.now());
     job.setJobStatus(JobStatus.RUNNING);
     job.setLastExecutionTime(LocalDateTime.now());
     jobRepository.save(job);
     JobExecutorResult result = jExecutorRegistry.getExecutor(job.getJobType()).execute(job);
 
     if (result.isJobSuccessful()) {
+      jobExecution.setStatus(JobExecutionStatus.SUCCESS);
       job.setJobStatus(JobStatus.COMPLETED);
       job.setSuccessCounter(job.getSuccessCounter() + 1);
       LocalDateTime nextRun = calculateNextExecutionTime(job);
@@ -55,12 +65,19 @@ public class ScheduleService {
         job.setJobStatus(JobStatus.COMPLETED);
         job.setNextExecutionTime(null);
       }
+      jobExecution.setEndTime(LocalDateTime.now());
+      jobExecution.setDurationMs(result.getExecutionTimeMs());
+      jExecutionRepository.save(jobExecution);
       jobRepository.save(job);
       System.out.println("Job: " + job.getJobName() + " ran successfully!");
     } else {
+      jobExecution.setEndTime(LocalDateTime.now());
+      jobExecution.setDurationMs(result.getExecutionTimeMs());
+      jobExecution.setStatus(JobExecutionStatus.FAILURE);
       job.setJobStatus(JobStatus.FAILED);
       job.setLastErrorMessage(result.getMessage());
       job.setFailureCounter(job.getFailureCounter() + 1);
+      jExecutionRepository.save(jobExecution);
       jobRepository.save(job);
       System.out.println("Job: " + job.getJobName() + " failed to run.");
     }
