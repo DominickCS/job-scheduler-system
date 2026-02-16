@@ -13,52 +13,61 @@ import com.dominickcs.job_scheduler_system.model.JobStatus;
 import com.dominickcs.job_scheduler_system.model.JobType;
 import com.dominickcs.job_scheduler_system.model.ScheduleType;
 import com.dominickcs.job_scheduler_system.repository.JobRepository;
-import com.dominickcs.job_scheduler_system.service.ScheduleService;
 
 @SpringBootTest
 @ContextConfiguration(classes = JobSchedulerSystemApplication.class, initializers = DotEnvConfig.class)
-class CreateTestJob {
+class CreateTestJobs {
 
   @Autowired
   private JobRepository jobRepository;
 
-  @Autowired
-  private ScheduleService scheduleService;
-
   @Test
-  void create() {
+  void createOneTime() {
     Job job = new Job();
 
     job.setJobStatus(JobStatus.SCHEDULED);
-    job.setJobName("TEST JOB");
+    job.setJobName("(TEST) ONE_TIME JOB");
     job.setJobType(JobType.EMAIL_NOTIFICATION);
     job.setParameters(
-        "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test\",\"body\":\"This is a test!\"}");
+        "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - ONE_TIME\",\"body\":\"This is a test!\"}");
     job.setEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
     job.setNextExecutionTime(LocalDateTime.now().minusMinutes(1));
     job.setScheduleType(ScheduleType.ONE_TIME);
     jobRepository.save(job);
-
-    scheduleService.processJobs();
   }
 
   @Test
-  void createTwo() {
+  void createFixedJob() {
     Job job = new Job();
 
     job.setJobStatus(JobStatus.SCHEDULED);
-    job.setJobName("TEST JOB TWO");
+    job.setJobName("(TEST) FIXED_DELAY JOB");
     job.setJobType(JobType.EMAIL_NOTIFICATION);
     job.setParameters(
-        "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - Two\",\"body\":\"This is a test!\"}");
+        "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - FIXED_DELAY\",\"body\":\"This is a test!\"}");
     job.setEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
     job.setNextExecutionTime(LocalDateTime.now().minusMinutes(1));
     job.setScheduleType(ScheduleType.FIXED_DELAY);
     job.setFixedDelay(5000L);
     jobRepository.save(job);
+  }
 
-    scheduleService.processJobs();
+  @Test
+  void createCronJob() {
+    Job job = new Job();
+
+    job.setJobStatus(JobStatus.SCHEDULED);
+    job.setJobName("(TEST) CRON JOB");
+    job.setJobType(JobType.EMAIL_NOTIFICATION);
+    job.setParameters(
+        "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - CRON\",\"body\":\"This is a test!\"}");
+    job.setEnabled(true);
+    job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
+    job.setNextExecutionTime(LocalDateTime.now().minusMinutes(1));
+    job.setScheduleType(ScheduleType.CRON);
+    job.setCronExpression("0 * * * * *");
+    jobRepository.save(job);
   }
 }
