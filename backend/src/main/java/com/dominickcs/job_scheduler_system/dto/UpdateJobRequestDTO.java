@@ -18,7 +18,7 @@ public class UpdateJobRequestDTO {
   private String jobDescription;
   @NotNull(message = "A schedule type must be specified.")
   private ScheduleType scheduleType;
-  private long fixedDelayMs;
+  private Long fixedDelayMs;
   private String cronExpression;
   private LocalDateTime nextExecutionTime;
   @NotBlank

@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.dominickcs.job_scheduler_system.dto.CreateJobRequestDTO;
 import com.dominickcs.job_scheduler_system.dto.JobResponseDTO;
+import com.dominickcs.job_scheduler_system.dto.UpdateJobRequestDTO;
+import com.dominickcs.job_scheduler_system.exception.JobNotFoundException;
 import com.dominickcs.job_scheduler_system.mapper.JobMapper;
 import com.dominickcs.job_scheduler_system.model.Job;
 import com.dominickcs.job_scheduler_system.model.JobStatus;
@@ -38,6 +40,45 @@ public class JobService {
 
     Job savedJob = jobRepository.save(job);
 
+    return JobMapper.jobResponseDTO(savedJob);
+  }
+
+  public JobResponseDTO updateJob(Long id, UpdateJobRequestDTO request) {
+    Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
+
+    if (request.getJobName() != null) {
+      job.setJobName(request.getJobName());
+    }
+
+    if (request.getCronExpression() != null) {
+      validateCronExpression(request.getCronExpression());
+      job.setCronExpression(request.getCronExpression());
+    }
+
+    if (request.getJobDescription() != null) {
+      job.setJobDescription(request.getJobDescription());
+    }
+
+    if (request.getNextExecutionTime() != null) {
+      job.setNextExecutionTime(request.getNextExecutionTime());
+    }
+
+    if (request.getScheduleType() != null) {
+      job.setScheduleType(job.getScheduleType());
+
+      LocalDateTime nextExecution = calculateInitialExecutionTime(job);
+      job.setNextExecutionTime(nextExecution);
+    }
+
+    if (request.getParameters() != null) {
+      job.setParameters(request.getParameters());
+    }
+
+    if (request.getFixedDelayMs() != null) {
+      job.setFixedDelay(request.getFixedDelayMs());
+    }
+
+    Job savedJob = jobRepository.save(job);
     return JobMapper.jobResponseDTO(savedJob);
   }
 
