@@ -7,7 +7,7 @@ spring:
     password: ${DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: create-only
+      ddl-auto: create-drop
   mail:
     host: smtp.gmail.com
     port: 587

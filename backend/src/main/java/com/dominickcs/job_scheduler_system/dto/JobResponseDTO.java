@@ -13,8 +13,8 @@ import lombok.Data;
 @Builder
 public class JobResponseDTO {
   private Long id;
-  private String name;
-  private String description;
+  private String jobName;
+  private String jobDescription;
   private JobType jobType;
   private ScheduleType scheduleType;
   private String cronExpression;

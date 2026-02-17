@@ -46,7 +46,7 @@ public class ScheduleService {
 
   public void executeJob(Job job) {
     JobExecution jobExecution = new JobExecution();
-    jobExecution.setJobId(job);
+    jobExecution.setJob(job);
     jobExecution.setStartTime(LocalDateTime.now());
     job.setJobStatus(JobStatus.RUNNING);
     job.setLastExecutionTime(LocalDateTime.now());

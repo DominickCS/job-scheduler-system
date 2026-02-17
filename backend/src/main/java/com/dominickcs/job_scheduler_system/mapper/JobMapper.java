@@ -7,18 +7,18 @@ import com.dominickcs.job_scheduler_system.model.Job;
 
 public class JobMapper {
   public static JobResponseDTO jobResponseDTO(Job job) {
-    return jobResponseDTO(job).builder()
+    return JobResponseDTO.builder()
         .createdAt(job.getCreatedAt())
         .cronExpression(job.getCronExpression())
         .id(job.getId())
         .jobType(job.getJobType())
-        .description(job.getJobDescription())
+        .jobDescription(job.getJobDescription())
         .enabled(job.isEnabled())
         .failureCount(job.getFailureCounter())
         .fixedDelayMs(job.getFixedDelay())
         .lastErrorMessage(job.getLastErrorMessage())
         .modifiedAt(job.getModifiedAt())
-        .name(job.getJobName())
+        .jobName(job.getJobName())
         .lastExecutionTime(job.getLastExecutionTime())
         .nextExecutionTime(job.getNextExecutionTime())
         .status(job.getJobStatus())

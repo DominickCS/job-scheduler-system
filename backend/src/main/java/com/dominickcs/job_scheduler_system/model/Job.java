@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,7 +33,8 @@ public class Job {
   @Enumerated(EnumType.STRING)
   private ScheduleType scheduleType;
   @Nullable
-  private long fixedDelay;
+  @Column(nullable = true)
+  private Long fixedDelay;
   @Nullable
   private String cronExpression;
   private long successCounter;
