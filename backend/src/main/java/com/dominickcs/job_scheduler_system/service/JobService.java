@@ -82,6 +82,44 @@ public class JobService {
     return JobMapper.jobResponseDTO(savedJob);
   }
 
+  public JobResponseDTO pauseJob(Long id) {
+    Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
+
+    job.setJobStatus(JobStatus.PAUSED);
+    job.setEnabled(false);
+
+    Job savedJob = jobRepository.save(job);
+    return JobMapper.jobResponseDTO(savedJob);
+  }
+
+  public JobResponseDTO resumeJob(Long id) {
+    Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
+
+    job.setJobStatus(JobStatus.SCHEDULED);
+    job.setEnabled(true);
+
+    Job savedJob = jobRepository.save(job);
+    return JobMapper.jobResponseDTO(savedJob);
+  }
+
+  public JobResponseDTO triggerJobNow(Long id) {
+    Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
+
+    job.setEnabled(true);
+    job.setNextExecutionTime(LocalDateTime.now());
+    job.setJobStatus(JobStatus.SCHEDULED);
+
+    Job savedJob = jobRepository.save(job);
+    return JobMapper.jobResponseDTO(savedJob);
+  }
+
+  public void deleteJob(Long id) {
+    if (!jobRepository.existsById(id)) {
+      throw new JobNotFoundException("Job not found with id: " + id);
+    }
+    jobRepository.deleteById(id);
+  }
+
   private void validateScheduleRequirements(CreateJobRequestDTO request) {
     switch (request.getScheduleType()) {
       case CRON:

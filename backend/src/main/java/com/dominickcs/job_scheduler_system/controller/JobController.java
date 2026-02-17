@@ -35,4 +35,28 @@ public class JobController {
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
   }
 
+  @PostMapping("/delete/{job_id}")
+  public String deleteJob(@PathVariable("job_id") Long id) {
+    jobService.deleteJob(id);
+    return ("Deleted job with id: " + id);
+  }
+
+  @PostMapping("/pause/{job_id}")
+  public ResponseEntity<JobResponseDTO> pauseJob(@PathVariable("job_id") Long id) {
+    JobResponseDTO response = jobService.pauseJob(id);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @PostMapping("/resume/{job_id}")
+  public ResponseEntity<JobResponseDTO> resumeJob(@PathVariable("job_id") Long id) {
+    JobResponseDTO response = jobService.resumeJob(id);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
+  @PostMapping("/trigger/{job_id}")
+  public ResponseEntity<JobResponseDTO> triggerJobNow(@PathVariable("job_id") Long id) {
+    JobResponseDTO response = jobService.triggerJobNow(id);
+    return ResponseEntity.status(HttpStatus.OK).body(response);
+  }
+
 }
