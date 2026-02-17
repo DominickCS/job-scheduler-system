@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -47,7 +48,7 @@ public class Job {
   @Nullable
   private LocalDateTime lastExecutionTime;
   private LocalDateTime nextExecutionTime;
-  @OneToMany(mappedBy = "job")
+  @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<JobExecution> jobExecutions;
 
   @PrePersist
