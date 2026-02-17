@@ -1,15 +1,18 @@
 package com.dominickcs.job_scheduler_system.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import com.dominickcs.job_scheduler_system.dto.CreateJobRequestDTO;
+import com.dominickcs.job_scheduler_system.dto.JobExecutionResponseDTO;
 import com.dominickcs.job_scheduler_system.dto.JobResponseDTO;
 import com.dominickcs.job_scheduler_system.dto.UpdateJobRequestDTO;
 import com.dominickcs.job_scheduler_system.exception.JobNotFoundException;
 import com.dominickcs.job_scheduler_system.mapper.JobMapper;
 import com.dominickcs.job_scheduler_system.model.Job;
+import com.dominickcs.job_scheduler_system.model.JobExecution;
 import com.dominickcs.job_scheduler_system.model.JobStatus;
 import com.dominickcs.job_scheduler_system.repository.JobExecutionRepository;
 import com.dominickcs.job_scheduler_system.repository.JobRepository;
@@ -118,6 +121,38 @@ public class JobService {
       throw new JobNotFoundException("Job not found with id: " + id);
     }
     jobRepository.deleteById(id);
+  }
+
+  public List<JobExecutionResponseDTO> getJobExecutions(Long jobId) {
+    if (!jobRepository.existsById(jobId)) {
+      throw new JobNotFoundException("Job not found with id: " + jobId);
+    }
+
+    List<JobExecution> executions = jExecutionRepository
+        .findByJobIdOrderByStartTimeDesc(jobId);
+
+    return executions.stream()
+        .map(JobMapper::toExecutionResponse)
+        .toList();
+  }
+
+  public List<JobExecutionResponseDTO> getAllExecutions() {
+    List<JobExecution> executions = jExecutionRepository
+        .findTop10ByOrderByStartTimeDesc();
+
+    return executions.stream()
+        .map(JobMapper::toExecutionResponse)
+        .toList();
+  }
+
+  public JobResponseDTO getJob(Long id) {
+    Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
+
+    return JobMapper.jobResponseDTO(job);
+  }
+
+  public List<Job> getAllJobs() {
+    return jobRepository.findAll();
   }
 
   private void validateScheduleRequirements(CreateJobRequestDTO request) {

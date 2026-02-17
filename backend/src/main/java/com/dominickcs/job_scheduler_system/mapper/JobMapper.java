@@ -1,9 +1,11 @@
 package com.dominickcs.job_scheduler_system.mapper;
 
 import com.dominickcs.job_scheduler_system.dto.CreateJobRequestDTO;
+import com.dominickcs.job_scheduler_system.dto.JobExecutionResponseDTO;
 import com.dominickcs.job_scheduler_system.dto.JobListResponseDTO;
 import com.dominickcs.job_scheduler_system.dto.JobResponseDTO;
 import com.dominickcs.job_scheduler_system.model.Job;
+import com.dominickcs.job_scheduler_system.model.JobExecution;
 
 public class JobMapper {
   public static JobResponseDTO jobResponseDTO(Job job) {
@@ -54,6 +56,20 @@ public class JobMapper {
     job.setEnabled(request.isEnabled());
     job.setNextExecutionTime(request.getNextExecutionTime());
     return job;
+  }
+
+  public static JobExecutionResponseDTO toExecutionResponse(JobExecution execution) {
+    return JobExecutionResponseDTO.builder()
+        .id(execution.getId())
+        .jobId(execution.getJob().getId())
+        .jobName(execution.getJob().getJobName())
+        .status(execution.getStatus())
+        .startTime(execution.getStartTime())
+        .endTime(execution.getEndTime())
+        .durationMs(execution.getDurationMs())
+        .errorMessage(execution.getErrorMessage())
+        .resultData(execution.getResultData())
+        .build();
   }
 
   private static Double calculateSuccessRate(Job job) {
