@@ -41,13 +41,13 @@ public class Job {
   private long successCounter;
   private long failureCounter;
   private String lastErrorMessage;
-  private String parameters;
-  private boolean enabled;
+  private String jobParameters;
+  private Boolean isEnabled;
   @Enumerated(EnumType.STRING)
   private JobStatus jobStatus;
   @Nullable
-  private LocalDateTime lastExecutionTime;
-  private LocalDateTime nextExecutionTime;
+  private LocalDateTime lastExecution;
+  private LocalDateTime nextExecution;
   @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<JobExecution> jobExecutions;
 

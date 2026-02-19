@@ -21,10 +21,10 @@ public class CreateJobRequestDTO {
   private JobType jobType;
   @NotNull(message = "A schedule type must be specified.")
   private ScheduleType scheduleType;
-  private Long fixedDelayMs;
+  private Long fixedDelay;
   private String cronExpression;
-  private LocalDateTime nextExecutionTime;
+  private LocalDateTime nextExecution;
   @NotBlank
-  private String parameters;
-  private boolean enabled = true;
+  private String jobParameters;
+  private Boolean isEnabled;
 }

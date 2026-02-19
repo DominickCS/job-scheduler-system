@@ -34,7 +34,7 @@ public class JobExecution {
   @Nullable
   private String errorMessage;
   @Nullable
-  private String resultData;
+  private String message;
   private LocalDateTime createdAt;
 
   @PrePersist

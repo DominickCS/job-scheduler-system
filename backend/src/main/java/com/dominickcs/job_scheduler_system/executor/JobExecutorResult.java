@@ -5,12 +5,14 @@ import lombok.Data;
 @Data
 public class JobExecutorResult {
   boolean jobSuccessful;
+  String errorMessage;
   String message;
   long executionTimeMs;
 
-  public JobExecutorResult(boolean jobSuccessful, String message, long executionTimeMs) {
+  public JobExecutorResult(boolean jobSuccessful, String message, String errorMessage, long executionTimeMs) {
     this.jobSuccessful = jobSuccessful;
     this.message = message;
+    this.errorMessage = errorMessage;
     this.executionTimeMs = executionTimeMs;
   }
 

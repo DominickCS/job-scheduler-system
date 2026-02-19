@@ -36,7 +36,7 @@ public class HealthCheckPingExecutor implements JobExecutor {
     // Capture current time in ms for execution time calculation
     long startTime = System.currentTimeMillis();
     try {
-      HealthCheckParameters healthCheckParameters = objectMapper.readValue(job.getParameters(),
+      HealthCheckParameters healthCheckParameters = objectMapper.readValue(job.getJobParameters(),
           HealthCheckParameters.class);
       // Configure and build the HTTP request given the mapped job parameters
       HttpRequest request = HttpRequest.newBuilder().GET().uri(URI.create(healthCheckParameters.getUrl()))
@@ -48,16 +48,17 @@ public class HealthCheckPingExecutor implements JobExecutor {
       int statusCode = httpResponse.statusCode();
       // Return results
       if (statusCode == healthCheckParameters.getExpectedStatus()) {
-        return new JobExecutorResult(true, "Health Check Passed! Status Returned: " + httpResponse.statusCode(),
+        return new JobExecutorResult(true, "Health Check Passed! Status Returned: " + httpResponse.statusCode(), null,
             executionTimeMs);
       } else {
-        return new JobExecutorResult(false, "Health Check Failed! Status Returned " + httpResponse.statusCode(),
+        return new JobExecutorResult(false, "Health Check Failed! Status Returned " + httpResponse.statusCode(), null,
             executionTimeMs);
       }
     } catch (IOException ioException) {
-      return new JobExecutorResult(false, "JOB FAILURE (" + job.getJobName() + ") | IOException " + ioException, 0L);
+      return new JobExecutorResult(false, null, "JOB FAILURE (" + job.getJobName() + ") | IOException " + ioException,
+          0L);
     } catch (InterruptedException interruptedException) {
-      return new JobExecutorResult(false,
+      return new JobExecutorResult(false, null,
           "JOB FAILURE (" + job.getJobName() + ") | InterruptedException " + interruptedException, 0L);
     }
   }

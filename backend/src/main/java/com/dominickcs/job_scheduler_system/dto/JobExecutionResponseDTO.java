@@ -17,5 +17,5 @@ public class JobExecutionResponseDTO {
   private LocalDateTime endTime;
   private Long durationMs;
   private String errorMessage;
-  private String resultData;
+  private String message;
 }

@@ -23,7 +23,7 @@ class MailExecutorJobTest {
     JobExecutorResult result;
     Job mailTestJob = new Job();
     mailTestJob.setJobType(JobType.EMAIL_NOTIFICATION);
-    mailTestJob.setParameters(
+    mailTestJob.setJobParameters(
         "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test\",\"body\":\"This is a test!\"}");
 
     result = executor.execute(mailTestJob);

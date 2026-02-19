@@ -39,7 +39,7 @@ public class JobService {
     job.setFailureCounter(0L);
 
     LocalDateTime nextExecution = calculateInitialExecutionTime(job);
-    job.setNextExecutionTime(nextExecution);
+    job.setNextExecution(nextExecution);
 
     Job savedJob = jobRepository.save(job);
 
@@ -62,23 +62,23 @@ public class JobService {
       job.setJobDescription(request.getJobDescription());
     }
 
-    if (request.getNextExecutionTime() != null) {
-      job.setNextExecutionTime(request.getNextExecutionTime());
+    if (request.getNextExecution() != null) {
+      job.setNextExecution(request.getNextExecution());
     }
 
     if (request.getScheduleType() != null) {
       job.setScheduleType(job.getScheduleType());
 
       LocalDateTime nextExecution = calculateInitialExecutionTime(job);
-      job.setNextExecutionTime(nextExecution);
+      job.setNextExecution(nextExecution);
     }
 
-    if (request.getParameters() != null) {
-      job.setParameters(request.getParameters());
+    if (request.getJobParameters() != null) {
+      job.setJobParameters(request.getJobParameters());
     }
 
-    if (request.getFixedDelayMs() != null) {
-      job.setFixedDelay(request.getFixedDelayMs());
+    if (request.getFixedDelay() != null) {
+      job.setFixedDelay(request.getFixedDelay());
     }
 
     Job savedJob = jobRepository.save(job);
@@ -89,7 +89,7 @@ public class JobService {
     Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
     job.setJobStatus(JobStatus.PAUSED);
-    job.setEnabled(false);
+    job.setIsEnabled(false);
 
     Job savedJob = jobRepository.save(job);
     return JobMapper.jobResponseDTO(savedJob);
@@ -99,7 +99,7 @@ public class JobService {
     Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
     job.setJobStatus(JobStatus.SCHEDULED);
-    job.setEnabled(true);
+    job.setIsEnabled(true);
 
     Job savedJob = jobRepository.save(job);
     return JobMapper.jobResponseDTO(savedJob);
@@ -108,8 +108,8 @@ public class JobService {
   public JobResponseDTO triggerJobNow(Long id) {
     Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
-    job.setEnabled(true);
-    job.setNextExecutionTime(LocalDateTime.now());
+    job.setIsEnabled(true);
+    job.setNextExecution(LocalDateTime.now());
     job.setJobStatus(JobStatus.SCHEDULED);
 
     Job savedJob = jobRepository.save(job);
@@ -165,7 +165,7 @@ public class JobService {
         break;
 
       case FIXED_DELAY:
-        if (request.getFixedDelayMs() == null || request.getFixedDelayMs() <= 0L) {
+        if (request.getFixedDelay() == null || request.getFixedDelay() <= 0L) {
           throw new IllegalArgumentException("Fixed delay must be positive for FIXED_DELAY schedule type");
         }
         break;
@@ -192,8 +192,8 @@ public class JobService {
         return LocalDateTime.now();
 
       case ONE_TIME:
-        return job.getNextExecutionTime() != null
-            ? job.getNextExecutionTime()
+        return job.getNextExecution() != null
+            ? job.getNextExecution()
             : LocalDateTime.now();
 
       default:

@@ -28,11 +28,11 @@ class CreateTestJobs {
     job.setJobStatus(JobStatus.SCHEDULED);
     job.setJobName("(TEST) ONE_TIME JOB");
     job.setJobType(JobType.EMAIL_NOTIFICATION);
-    job.setParameters(
+    job.setJobParameters(
         "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - ONE_TIME\",\"body\":\"This is a test!\"}");
-    job.setEnabled(true);
+    job.setIsEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
-    job.setNextExecutionTime(LocalDateTime.now().minusMinutes(1));
+    job.setNextExecution(LocalDateTime.now().minusMinutes(1));
     job.setScheduleType(ScheduleType.ONE_TIME);
     jobRepository.save(job);
   }
@@ -44,11 +44,11 @@ class CreateTestJobs {
     job.setJobStatus(JobStatus.SCHEDULED);
     job.setJobName("(TEST) FIXED_DELAY JOB");
     job.setJobType(JobType.EMAIL_NOTIFICATION);
-    job.setParameters(
+    job.setJobParameters(
         "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - FIXED_DELAY\",\"body\":\"This is a test!\"}");
-    job.setEnabled(true);
+    job.setIsEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
-    job.setNextExecutionTime(LocalDateTime.now().minusMinutes(1));
+    job.setNextExecution(LocalDateTime.now().minusMinutes(1));
     job.setScheduleType(ScheduleType.FIXED_DELAY);
     job.setFixedDelay(5000L);
     jobRepository.save(job);
@@ -61,11 +61,11 @@ class CreateTestJobs {
     job.setJobStatus(JobStatus.SCHEDULED);
     job.setJobName("(TEST) CRON JOB");
     job.setJobType(JobType.EMAIL_NOTIFICATION);
-    job.setParameters(
+    job.setJobParameters(
         "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - CRON\",\"body\":\"This is a test!\"}");
-    job.setEnabled(true);
+    job.setIsEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
-    job.setNextExecutionTime(LocalDateTime.now().minusMinutes(1));
+    job.setNextExecution(LocalDateTime.now().minusMinutes(1));
     job.setScheduleType(ScheduleType.CRON);
     job.setCronExpression("0 * * * * *");
     jobRepository.save(job);

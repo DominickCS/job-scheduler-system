@@ -32,14 +32,17 @@ public class ScheduleService {
     this.jExecutionRepository = jExecutionRepository;
   }
 
-  @Scheduled(fixedDelay = 30000)
+  @Scheduled(fixedDelay = 5000)
   @Transactional
   public void processJobs() {
     List<Job> jobsToExecute = jobRepository.findJobsDueForExecution(LocalDateTime.now(), JobStatus.SCHEDULED);
     System.out.println("Found " + jobsToExecute.size() + " jobs to execute");
+    System.out.println();
 
     for (Job job : jobsToExecute) {
+      System.out.println();
       System.out.println("Executing job: " + job.getJobName());
+      System.out.println("------------------------------------");
       executeJob(job);
     }
   }
@@ -49,7 +52,7 @@ public class ScheduleService {
     jobExecution.setJob(job);
     jobExecution.setStartTime(LocalDateTime.now());
     job.setJobStatus(JobStatus.RUNNING);
-    job.setLastExecutionTime(LocalDateTime.now());
+    job.setLastExecution(LocalDateTime.now());
     jobRepository.save(job);
     JobExecutorResult result = jExecutorRegistry.getExecutor(job.getJobType()).execute(job);
 
@@ -59,28 +62,31 @@ public class ScheduleService {
       job.setSuccessCounter(job.getSuccessCounter() + 1);
       LocalDateTime nextRun = calculateNextExecutionTime(job);
       if (nextRun != null) {
-        job.setNextExecutionTime(nextRun);
+        job.setNextExecution(nextRun);
         job.setJobStatus(JobStatus.SCHEDULED);
       } else {
         job.setJobStatus(JobStatus.COMPLETED);
-        job.setNextExecutionTime(null);
+        job.setNextExecution(null);
       }
       jobExecution.setEndTime(LocalDateTime.now());
       jobExecution.setDurationMs(result.getExecutionTimeMs());
+      jobExecution.setMessage(result.getMessage());
       jExecutionRepository.save(jobExecution);
       jobRepository.save(job);
       System.out.println("Job: " + job.getJobName() + " ran successfully!");
+      System.out.println();
     } else {
       jobExecution.setEndTime(LocalDateTime.now());
       jobExecution.setDurationMs(result.getExecutionTimeMs());
       jobExecution.setStatus(JobExecutionStatus.FAILURE);
-      jobExecution.setErrorMessage(result.getMessage());
+      jobExecution.setErrorMessage(result.getErrorMessage());
       job.setJobStatus(JobStatus.FAILED);
       job.setLastErrorMessage(result.getMessage());
       job.setFailureCounter(job.getFailureCounter() + 1);
       jExecutionRepository.save(jobExecution);
       jobRepository.save(job);
       System.out.println("Job: " + job.getJobName() + " failed to run.");
+      System.out.println();
     }
 
   }

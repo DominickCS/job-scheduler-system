@@ -18,11 +18,11 @@ public class JobResponseDTO {
   private JobType jobType;
   private ScheduleType scheduleType;
   private String cronExpression;
-  private Long fixedDelayMs;
+  private Long fixedDelay;
   private JobStatus status;
-  private Boolean enabled;
-  private LocalDateTime nextExecutionTime;
-  private LocalDateTime lastExecutionTime;
+  private Boolean isEnabled;
+  private LocalDateTime nextExecution;
+  private LocalDateTime lastExecution;
   private Long successCount;
   private Long failureCount;
   private String lastErrorMessage;

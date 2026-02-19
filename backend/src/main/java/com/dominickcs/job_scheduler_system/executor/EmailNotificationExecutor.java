@@ -32,15 +32,15 @@ public class EmailNotificationExecutor implements JobExecutor {
     // Capture current time in ms for execution time calculation
     long startTime = System.currentTimeMillis();
     try {
-      EmailParameters emailParameters = objectMapper.readValue(job.getParameters(), EmailParameters.class);
+      EmailParameters emailParameters = objectMapper.readValue(job.getJobParameters(), EmailParameters.class);
 
       // Configure a MimeMessage and set parameters from job parameter values
       MimeMessage message = mailSender.createMimeMessage();
-      message.setFrom(emailParameters.getFrom());
-      message.addRecipients(Message.RecipientType.TO, emailParameters.getTo());
-      message.setSubject(emailParameters.getSubject());
+      message.setFrom(emailParameters.getEmailFrom());
+      message.addRecipients(Message.RecipientType.TO, emailParameters.getEmailTo());
+      message.setSubject(emailParameters.getEmailSubject());
       message.setSentDate(new Date());
-      message.setText(emailParameters.getBody());
+      message.setText(emailParameters.getEmailBody());
 
       // Send the email message
       mailSender.send(message);
@@ -49,12 +49,12 @@ public class EmailNotificationExecutor implements JobExecutor {
       long executionTime = System.currentTimeMillis() - startTime;
 
       // Return results
-      return new JobExecutorResult(true, "Email was sent successfully!", executionTime);
+      return new JobExecutorResult(true, "Email was sent successfully!", null, executionTime);
 
     } catch (MessagingException messagingException) {
-      return new JobExecutorResult(false, "Failed to send email: " + messagingException, 0L);
+      return new JobExecutorResult(false, null, "Failed to send email: " + messagingException, 0L);
     } catch (JsonProcessingException jsonProcessingException) {
-      return new JobExecutorResult(false, "Failed to process email parameters: " + jsonProcessingException, 0L);
+      return new JobExecutorResult(false, null, "Failed to process email parameters: " + jsonProcessingException, 0L);
     }
   }
 

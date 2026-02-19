@@ -25,7 +25,7 @@ class HealthCheckPingJobTest {
 
     healthyJob.setJobType(JobType.HEALTH_CHECK_PING);
     healthyJob.setJobName("HEALTHY JOB TEST");
-    healthyJob.setParameters(
+    healthyJob.setJobParameters(
         "{\"url\":\"https://www.google.com\"," +
             "\"expectedStatus\":200," +
             "\"timeoutSeconds\":5}");
@@ -49,7 +49,7 @@ class HealthCheckPingJobTest {
 
     unhealthyJob.setJobType(JobType.HEALTH_CHECK_PING);
     unhealthyJob.setJobName("UNHEALTHY JOB TEST");
-    unhealthyJob.setParameters(
+    unhealthyJob.setJobParameters(
         "{\"url\":\"https://tools-httpstatus.pickup-services.com/404\"," +
             "\"expectedStatus\":200," +
             "\"timeoutSeconds\":5}");

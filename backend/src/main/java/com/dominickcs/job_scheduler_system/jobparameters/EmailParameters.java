@@ -4,8 +4,8 @@ import lombok.Data;
 
 @Data
 public class EmailParameters {
-  private String from;
-  private String to;
-  private String subject;
-  private String body;
+  private String emailFrom;
+  private String emailTo;
+  private String emailSubject;
+  private String emailBody;
 }

@@ -15,14 +15,14 @@ public class JobMapper {
         .id(job.getId())
         .jobType(job.getJobType())
         .jobDescription(job.getJobDescription())
-        .enabled(job.isEnabled())
+        .isEnabled(job.getIsEnabled())
         .failureCount(job.getFailureCounter())
-        .fixedDelayMs(job.getFixedDelay())
+        .fixedDelay(job.getFixedDelay())
         .lastErrorMessage(job.getLastErrorMessage())
         .modifiedAt(job.getModifiedAt())
         .jobName(job.getJobName())
-        .lastExecutionTime(job.getLastExecutionTime())
-        .nextExecutionTime(job.getNextExecutionTime())
+        .lastExecution(job.getLastExecution())
+        .nextExecution(job.getNextExecution())
         .status(job.getJobStatus())
         .successCount(job.getSuccessCounter())
         .totalExecutions(job.getSuccessCounter() + job.getFailureCounter())
@@ -35,10 +35,10 @@ public class JobMapper {
     return JobListResponseDTO.builder()
         .id(job.getId())
         .name(job.getJobName())
-        .enabled(job.isEnabled())
+        .enabled(job.getIsEnabled())
         .jobType(job.getJobType())
         .failureCount(job.getFailureCounter())
-        .nextExecutionTime(job.getNextExecutionTime())
+        .nextExecutionTime(job.getNextExecution())
         .status(job.getJobStatus())
         .successCount(job.getSuccessCounter())
         .build();
@@ -50,11 +50,11 @@ public class JobMapper {
     job.setJobDescription(request.getJobDescription());
     job.setJobType(request.getJobType());
     job.setScheduleType(request.getScheduleType());
-    job.setFixedDelay(request.getFixedDelayMs());
+    job.setFixedDelay(request.getFixedDelay());
     job.setCronExpression(request.getCronExpression());
-    job.setParameters(request.getParameters());
-    job.setEnabled(request.isEnabled());
-    job.setNextExecutionTime(request.getNextExecutionTime());
+    job.setJobParameters(request.getJobParameters());
+    job.setIsEnabled(request.getIsEnabled());
+    job.setNextExecution(request.getNextExecution());
     return job;
   }
 
@@ -68,7 +68,7 @@ public class JobMapper {
         .endTime(execution.getEndTime())
         .durationMs(execution.getDurationMs())
         .errorMessage(execution.getErrorMessage())
-        .resultData(execution.getResultData())
+        .message(execution.getMessage())
         .build();
   }
 
