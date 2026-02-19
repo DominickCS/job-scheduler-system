@@ -228,7 +228,7 @@ export default function App() {
                       <p>Enabled: {job.isEnabled ? "✓" : "✕"}</p>
                       <p>Job Status: {job.jobStatus}</p>
                       <p>Next Execution: {new Date(job.nextExecution).toLocaleString()}</p>
-                      <div className="my-2 [&>button]:px-8 [&>button]:mx-4">
+                      <div className="my-2 [&>button]:px-8 [&>button]:mr-8">
                         {job.isEnabled ?
                           <button className="border p-2 hover:bg-gray-800/50" onClick={() => pauseJob(job.id)}>Pause</button>
                           :
