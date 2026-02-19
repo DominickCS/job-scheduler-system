@@ -51,7 +51,7 @@ public class HealthCheckPingExecutor implements JobExecutor {
         return new JobExecutorResult(true, "Health Check Passed! Status Returned: " + httpResponse.statusCode(), null,
             executionTimeMs);
       } else {
-        return new JobExecutorResult(false, "Health Check Failed! Status Returned " + httpResponse.statusCode(), null,
+        return new JobExecutorResult(true, "Health Check Failed! Status Returned " + httpResponse.statusCode(), null,
             executionTimeMs);
       }
     } catch (IOException ioException) {

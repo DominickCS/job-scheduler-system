@@ -13,6 +13,5 @@ public interface JobExecutionRepository extends JpaRepository<JobExecution, Long
   @Query("SELECT je FROM JobExecution je WHERE je.job.id = :jobId ORDER BY je.startTime DESC")
   List<JobExecution> findByJobIdOrderByStartTimeDesc(@Param("jobId") Long jobId);
 
-  @Query("SELECT je FROM JobExecution je ORDER BY je.startTime DESC")
-  List<JobExecution> findTop10ByOrderByStartTimeDesc();
+  List<JobExecution> findTop10ByOrderByIdDesc();
 }

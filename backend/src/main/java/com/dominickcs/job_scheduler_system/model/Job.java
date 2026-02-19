@@ -3,6 +3,8 @@ package com.dominickcs.job_scheduler_system.model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.annotation.Nullable;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -40,7 +42,9 @@ public class Job {
   private String cronExpression;
   private long successCounter;
   private long failureCounter;
+  @Column(columnDefinition = "TEXT")
   private String lastErrorMessage;
+  @Column(columnDefinition = "TEXT")
   private String jobParameters;
   private Boolean isEnabled;
   @Enumerated(EnumType.STRING)
@@ -48,6 +52,7 @@ public class Job {
   @Nullable
   private LocalDateTime lastExecution;
   private LocalDateTime nextExecution;
+  @JsonIgnore
   @OneToMany(mappedBy = "job", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<JobExecution> jobExecutions;
 

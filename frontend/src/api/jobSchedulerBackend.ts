@@ -26,3 +26,25 @@ export async function CreateJob(jobName: string, jobDescription: string, jobType
   })
   return response.json();
 }
+
+export async function getJobs() {
+  const response = await fetch(`${url}/jobs`, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
+  return response.json();
+}
+
+export async function getJobExecutions() {
+  const response = await fetch(`${url}/executions`, {
+    method: "GET",
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+
+  return response.json();
+}

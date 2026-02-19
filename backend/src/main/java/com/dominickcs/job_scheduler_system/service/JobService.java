@@ -138,7 +138,7 @@ public class JobService {
 
   public List<JobExecutionResponseDTO> getAllExecutions() {
     List<JobExecution> executions = jExecutionRepository
-        .findTop10ByOrderByStartTimeDesc();
+        .findTop10ByOrderByIdDesc();
 
     return executions.stream()
         .map(JobMapper::toExecutionResponse)
@@ -152,7 +152,7 @@ public class JobService {
   }
 
   public List<Job> getAllJobs() {
-    return jobRepository.findAll();
+    return jobRepository.findByOrderByIdAsc();
   }
 
   private void validateScheduleRequirements(CreateJobRequestDTO request) {

@@ -13,4 +13,6 @@ public interface JobRepository extends JpaRepository<Job, Long> {
   @Query("SELECT j FROM Job j WHERE j.nextExecution <= :currentTime AND j.jobStatus = :jobStatus AND j.isEnabled = true")
   List<Job> findJobsDueForExecution(LocalDateTime currentTime, JobStatus jobStatus);
 
+  List<Job> findByOrderByIdAsc();
+
 }

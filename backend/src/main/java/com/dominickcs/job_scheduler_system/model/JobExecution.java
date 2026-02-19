@@ -3,6 +3,7 @@ package com.dominickcs.job_scheduler_system.model;
 import java.time.LocalDateTime;
 
 import jakarta.annotation.Nullable;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -32,8 +33,10 @@ public class JobExecution {
   @Enumerated(EnumType.STRING)
   private JobExecutionStatus status;
   @Nullable
+  @Column(columnDefinition = "TEXT")
   private String errorMessage;
   @Nullable
+  @Column(columnDefinition = "TEXT")
   private String message;
   private LocalDateTime createdAt;
 
