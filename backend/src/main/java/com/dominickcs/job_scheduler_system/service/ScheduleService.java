@@ -66,6 +66,7 @@ public class ScheduleService {
         job.setJobStatus(JobStatus.SCHEDULED);
       } else {
         job.setJobStatus(JobStatus.COMPLETED);
+        job.setIsEnabled(false);
         job.setNextExecution(null);
       }
       jobExecution.setEndTime(LocalDateTime.now());

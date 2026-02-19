@@ -147,6 +147,7 @@ export default function App() {
   return (
     <>
       <div className="*:my-4 ">
+        <h1 className="font-extrabold text-2xl text-center underline underline-offset-8">Job Scheduler Dashboard</h1>
         <div className="mx-auto grid grid-cols-2 gap-8 px-24 max-w-full ">
           <div>
             <form key={formKey} onSubmit={handleFormSubmit} className="[&>div]:my-8">
