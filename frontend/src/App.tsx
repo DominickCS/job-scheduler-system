@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { CreateJob, getJobExecutions, getJobs } from "./api/jobSchedulerBackend";
+import { CreateJob, deleteJob, getJobExecutions, getJobs, pauseJob, resumeJob, triggerJob } from "./api/jobSchedulerBackend";
 
 export default function App() {
   const [showCronExpressionBox, setShowCronExpressionBox] = useState(false);
@@ -228,6 +228,15 @@ export default function App() {
                       <p>Enabled: {job.isEnabled ? "✓" : "✕"}</p>
                       <p>Job Status: {job.jobStatus}</p>
                       <p>Next Execution: {new Date(job.nextExecution).toLocaleString()}</p>
+                      <div className="my-2 [&>button]:px-8 [&>button]:mx-4">
+                        {job.isEnabled ?
+                          <button className="border p-2 hover:bg-gray-800/50" onClick={() => pauseJob(job.id)}>Pause</button>
+                          :
+                          <button className="border p-2 hover:bg-gray-800/50" onClick={() => resumeJob(job.id)}>Resume</button>
+                        }
+                        <button className="border p-2 hover:bg-gray-800/50" onClick={() => triggerJob(job.id)}>Trigger Manually</button>
+                        <button className="border p-2 hover:bg-red-800/50" onClick={() => deleteJob(job.id)}>Delete</button>
+                      </div>
                     </div>
                   )
                 })}

@@ -48,3 +48,55 @@ export async function getJobExecutions() {
 
   return response.json();
 }
+
+export async function pauseJob(jobId: number) {
+  const response = await fetch(`${url}/jobs/pause/${jobId}`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: jobId
+    })
+  })
+  return response.json();
+}
+
+export async function resumeJob(jobId: number) {
+  const response = await fetch(`${url}/jobs/resume/${jobId}`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: jobId
+    })
+  })
+  return response.json();
+}
+
+export async function triggerJob(jobId: number) {
+  const response = await fetch(`${url}/jobs/trigger/${jobId}`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: jobId
+    })
+  })
+  return response.json()
+}
+
+export async function deleteJob(jobId: number) {
+  const response = await fetch(`${url}/jobs/delete/${jobId}`, {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      id: jobId
+    })
+  })
+  return response.json()
+}
