@@ -5,10 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.dominickcs.job_scheduler_system.dto.CreateJobRequestDTO;
-import com.dominickcs.job_scheduler_system.dto.JobExecutionResponseDTO;
-import com.dominickcs.job_scheduler_system.dto.JobResponseDTO;
-import com.dominickcs.job_scheduler_system.dto.UpdateJobRequestDTO;
+import com.dominickcs.job_scheduler_system.dto.CreateJobRequest;
+import com.dominickcs.job_scheduler_system.dto.JobExecutionResponse;
+import com.dominickcs.job_scheduler_system.dto.JobResponse;
+import com.dominickcs.job_scheduler_system.dto.UpdateJobRequest;
 import com.dominickcs.job_scheduler_system.exception.JobNotFoundException;
 import com.dominickcs.job_scheduler_system.mapper.JobMapper;
 import com.dominickcs.job_scheduler_system.model.Job;
@@ -30,7 +30,7 @@ public class JobService {
     this.jExecutionRepository = jExecutionRepository;
   }
 
-  public JobResponseDTO createJob(CreateJobRequestDTO request) {
+  public JobResponse createJob(CreateJobRequest request) {
     validateScheduleRequirements(request);
     Job job = JobMapper.toEntity(request);
 
@@ -46,7 +46,7 @@ public class JobService {
     return JobMapper.jobResponseDTO(savedJob);
   }
 
-  public JobResponseDTO updateJob(Long id, UpdateJobRequestDTO request) {
+  public JobResponse updateJob(Long id, UpdateJobRequest request) {
     Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
     if (request.getJobName() != null) {
@@ -85,7 +85,7 @@ public class JobService {
     return JobMapper.jobResponseDTO(savedJob);
   }
 
-  public JobResponseDTO pauseJob(Long id) {
+  public JobResponse pauseJob(Long id) {
     Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
     job.setJobStatus(JobStatus.PAUSED);
@@ -95,7 +95,7 @@ public class JobService {
     return JobMapper.jobResponseDTO(savedJob);
   }
 
-  public JobResponseDTO resumeJob(Long id) {
+  public JobResponse resumeJob(Long id) {
     Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
     job.setJobStatus(JobStatus.SCHEDULED);
@@ -105,7 +105,7 @@ public class JobService {
     return JobMapper.jobResponseDTO(savedJob);
   }
 
-  public JobResponseDTO triggerJobNow(Long id) {
+  public JobResponse triggerJobNow(Long id) {
     Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
     job.setIsEnabled(true);
@@ -123,7 +123,7 @@ public class JobService {
     jobRepository.deleteById(id);
   }
 
-  public List<JobExecutionResponseDTO> getJobExecutions(Long jobId) {
+  public List<JobExecutionResponse> getJobExecutions(Long jobId) {
     if (!jobRepository.existsById(jobId)) {
       throw new JobNotFoundException("Job not found with id: " + jobId);
     }
@@ -136,7 +136,7 @@ public class JobService {
         .toList();
   }
 
-  public List<JobExecutionResponseDTO> getAllExecutions() {
+  public List<JobExecutionResponse> getAllExecutions() {
     List<JobExecution> executions = jExecutionRepository
         .findTop10ByOrderByIdDesc();
 
@@ -145,7 +145,7 @@ public class JobService {
         .toList();
   }
 
-  public JobResponseDTO getJob(Long id) {
+  public JobResponse getJob(Long id) {
     Job job = jobRepository.findById(id).orElseThrow(() -> new JobNotFoundException("Job not found with id: " + id));
 
     return JobMapper.jobResponseDTO(job);
@@ -155,7 +155,7 @@ public class JobService {
     return jobRepository.findByOrderByIdAsc();
   }
 
-  private void validateScheduleRequirements(CreateJobRequestDTO request) {
+  private void validateScheduleRequirements(CreateJobRequest request) {
     switch (request.getScheduleType()) {
       case CRON:
         if (request.getCronExpression() == null || request.getCronExpression().isBlank()) {

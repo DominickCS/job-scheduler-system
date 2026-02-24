@@ -1,15 +1,15 @@
 package com.dominickcs.job_scheduler_system.mapper;
 
-import com.dominickcs.job_scheduler_system.dto.CreateJobRequestDTO;
-import com.dominickcs.job_scheduler_system.dto.JobExecutionResponseDTO;
-import com.dominickcs.job_scheduler_system.dto.JobListResponseDTO;
-import com.dominickcs.job_scheduler_system.dto.JobResponseDTO;
+import com.dominickcs.job_scheduler_system.dto.CreateJobRequest;
+import com.dominickcs.job_scheduler_system.dto.JobExecutionResponse;
+import com.dominickcs.job_scheduler_system.dto.JobListResponse;
+import com.dominickcs.job_scheduler_system.dto.JobResponse;
 import com.dominickcs.job_scheduler_system.model.Job;
 import com.dominickcs.job_scheduler_system.model.JobExecution;
 
 public class JobMapper {
-  public static JobResponseDTO jobResponseDTO(Job job) {
-    return JobResponseDTO.builder()
+  public static JobResponse jobResponseDTO(Job job) {
+    return JobResponse.builder()
         .createdAt(job.getCreatedAt())
         .cronExpression(job.getCronExpression())
         .id(job.getId())
@@ -31,8 +31,8 @@ public class JobMapper {
         .build();
   }
 
-  public static JobListResponseDTO jobListResponseDTO(Job job) {
-    return JobListResponseDTO.builder()
+  public static JobListResponse jobListResponseDTO(Job job) {
+    return JobListResponse.builder()
         .id(job.getId())
         .name(job.getJobName())
         .enabled(job.getIsEnabled())
@@ -44,7 +44,7 @@ public class JobMapper {
         .build();
   }
 
-  public static Job toEntity(CreateJobRequestDTO request) {
+  public static Job toEntity(CreateJobRequest request) {
     Job job = new Job();
     job.setJobName(request.getJobName());
     job.setJobDescription(request.getJobDescription());
@@ -58,8 +58,8 @@ public class JobMapper {
     return job;
   }
 
-  public static JobExecutionResponseDTO toExecutionResponse(JobExecution execution) {
-    return JobExecutionResponseDTO.builder()
+  public static JobExecutionResponse toExecutionResponse(JobExecution execution) {
+    return JobExecutionResponse.builder()
         .id(execution.getId())
         .jobId(execution.getJob().getId())
         .jobName(execution.getJob().getJobName())

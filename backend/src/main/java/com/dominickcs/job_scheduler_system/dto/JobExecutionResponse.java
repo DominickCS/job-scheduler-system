@@ -7,7 +7,7 @@ import lombok.Builder;
 
 @Data
 @Builder
-public class JobExecutionResponseDTO {
+public class JobExecutionResponse {
 
   private Long id;
   private Long jobId;

@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.dominickcs.job_scheduler_system.dto.CreateJobRequestDTO;
-import com.dominickcs.job_scheduler_system.dto.JobExecutionResponseDTO;
-import com.dominickcs.job_scheduler_system.dto.JobResponseDTO;
-import com.dominickcs.job_scheduler_system.dto.UpdateJobRequestDTO;
+import com.dominickcs.job_scheduler_system.dto.CreateJobRequest;
+import com.dominickcs.job_scheduler_system.dto.JobExecutionResponse;
+import com.dominickcs.job_scheduler_system.dto.JobResponse;
+import com.dominickcs.job_scheduler_system.dto.UpdateJobRequest;
 import com.dominickcs.job_scheduler_system.model.Job;
 import com.dominickcs.job_scheduler_system.service.JobService;
 
@@ -30,15 +30,15 @@ public class JobController {
   private JobService jobService;
 
   @PostMapping("/jobs/create")
-  public ResponseEntity<JobResponseDTO> createJob(@Valid @RequestBody CreateJobRequestDTO createJobRequestDTO) {
-    JobResponseDTO response = jobService.createJob(createJobRequestDTO);
+  public ResponseEntity<JobResponse> createJob(@Valid @RequestBody CreateJobRequest createJobRequest) {
+    JobResponse response = jobService.createJob(createJobRequest);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
   @PostMapping("/jobs/update/{job_id}")
-  public ResponseEntity<JobResponseDTO> updateJob(@PathVariable("job_id") Long id,
-      @Valid @RequestBody UpdateJobRequestDTO updateJobRequestDTO) {
-    JobResponseDTO response = jobService.updateJob(id, updateJobRequestDTO);
+  public ResponseEntity<JobResponse> updateJob(@PathVariable("job_id") Long id,
+      @Valid @RequestBody UpdateJobRequest updateJobRequest) {
+    JobResponse response = jobService.updateJob(id, updateJobRequest);
     return ResponseEntity.status(HttpStatus.ACCEPTED).body(response);
   }
 
@@ -49,36 +49,36 @@ public class JobController {
   }
 
   @PostMapping("/jobs/pause/{job_id}")
-  public ResponseEntity<JobResponseDTO> pauseJob(@PathVariable("job_id") Long id) {
-    JobResponseDTO response = jobService.pauseJob(id);
+  public ResponseEntity<JobResponse> pauseJob(@PathVariable("job_id") Long id) {
+    JobResponse response = jobService.pauseJob(id);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @PostMapping("/jobs/resume/{job_id}")
-  public ResponseEntity<JobResponseDTO> resumeJob(@PathVariable("job_id") Long id) {
-    JobResponseDTO response = jobService.resumeJob(id);
+  public ResponseEntity<JobResponse> resumeJob(@PathVariable("job_id") Long id) {
+    JobResponse response = jobService.resumeJob(id);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @PostMapping("/jobs/trigger/{job_id}")
-  public ResponseEntity<JobResponseDTO> triggerJobNow(@PathVariable("job_id") Long id) {
-    JobResponseDTO response = jobService.triggerJobNow(id);
+  public ResponseEntity<JobResponse> triggerJobNow(@PathVariable("job_id") Long id) {
+    JobResponse response = jobService.triggerJobNow(id);
     return ResponseEntity.status(HttpStatus.OK).body(response);
   }
 
   @GetMapping("/jobs/{job_id}")
-  public ResponseEntity<JobResponseDTO> getJob(@PathVariable("job_id") Long id) {
-    JobResponseDTO response = jobService.getJob(id);
+  public ResponseEntity<JobResponse> getJob(@PathVariable("job_id") Long id) {
+    JobResponse response = jobService.getJob(id);
     return ResponseEntity.status(HttpStatus.FOUND).body(response);
   }
 
   @GetMapping("/executions")
-  public List<JobExecutionResponseDTO> getLatestExecutions() {
+  public List<JobExecutionResponse> getLatestExecutions() {
     return jobService.getAllExecutions();
   }
 
   @GetMapping("/jobs/{id}/executions")
-  public List<JobExecutionResponseDTO> getJobExecutions(@PathVariable("job_id") Long id) {
+  public List<JobExecutionResponse> getJobExecutions(@PathVariable("job_id") Long id) {
     return jobService.getJobExecutions(id);
   }
 

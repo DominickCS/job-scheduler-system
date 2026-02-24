@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class CreateJobRequestDTO {
+public class CreateJobRequest {
   @NotBlank(message = "A job name is required.")
   @Size(min = 4, message = "The job name must be at least four (4) characters long.")
   private String jobName;

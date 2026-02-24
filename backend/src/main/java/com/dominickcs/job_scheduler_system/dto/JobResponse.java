@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class JobResponseDTO {
+public class JobResponse {
   private Long id;
   private String jobName;
   private String jobDescription;
