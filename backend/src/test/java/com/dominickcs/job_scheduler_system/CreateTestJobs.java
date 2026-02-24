@@ -29,7 +29,7 @@ class CreateTestJobs {
     job.setJobName("(TEST) ONE_TIME JOB");
     job.setJobType(JobType.EMAIL_NOTIFICATION);
     job.setJobParameters(
-        "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - ONE_TIME\",\"body\":\"This is a test!\"}");
+        "{\"emailFrom\":\"no-reply@dominickcs.com\",\"emailTo\":\"dominick.smith938@gmail.com\",\"emailSubject\":\"MailExecutorJobTest - Unit Test - CRON\",\"emailBody\":\"This is a test!\"}");
     job.setIsEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
     job.setNextExecution(LocalDateTime.now().minusMinutes(1));
@@ -45,7 +45,7 @@ class CreateTestJobs {
     job.setJobName("(TEST) FIXED_DELAY JOB");
     job.setJobType(JobType.EMAIL_NOTIFICATION);
     job.setJobParameters(
-        "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - FIXED_DELAY\",\"body\":\"This is a test!\"}");
+        "{\"emailFrom\":\"no-reply@dominickcs.com\",\"emailTo\":\"dominick.smith938@gmail.com\",\"emailSubject\":\"MailExecutorJobTest - Unit Test - CRON\",\"emailBody\":\"This is a test!\"}");
     job.setIsEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
     job.setNextExecution(LocalDateTime.now().minusMinutes(1));
@@ -62,12 +62,29 @@ class CreateTestJobs {
     job.setJobName("(TEST) CRON JOB");
     job.setJobType(JobType.EMAIL_NOTIFICATION);
     job.setJobParameters(
-        "{\"from\":\"no-reply@dominickcs.com\",\"to\":\"dominick.smith938@gmail.com\",\"subject\":\"MailExecutorJobTest - Unit Test - CRON\",\"body\":\"This is a test!\"}");
+        "{\"emailFrom\":\"no-reply@dominickcs.com\",\"emailTo\":\"dominick.smith938@gmail.com\",\"emailSubject\":\"MailExecutorJobTest - Unit Test - CRON\",\"emailBody\":\"This is a test!\"}");
     job.setIsEnabled(true);
     job.setJobDescription("Execution of the CreateTestJob Unit Test - EMAIL_NOTIFICATION");
     job.setNextExecution(LocalDateTime.now().minusMinutes(1));
     job.setScheduleType(ScheduleType.CRON);
     job.setCronExpression("0 * * * * *");
+    jobRepository.save(job);
+  }
+
+  @Test
+  void createFailedJob() {
+    Job job = new Job();
+
+    job.setJobStatus(JobStatus.FAILED);
+    job.setJobName("(TEST) FAILED JOB");
+    job.setJobType(JobType.EMAIL_NOTIFICATION);
+    job.setJobParameters(
+        "{\"emailFrom\":\"no-reply@dominickcs.com\",\"emailTo\":\"dominick.smith938\",\"emailSubject\":\"MailExecutorJobTest - Unit Test - CRON\",\"emailBody\":\"This is a test!\"}");
+    job.setIsEnabled(true);
+    job.setJobDescription("Execution of the CreateTestJob Unit Test - FAILED_JOB");
+    job.setNextExecution(LocalDateTime.now().minusMinutes(1));
+    job.setScheduleType(ScheduleType.FIXED_DELAY);
+    job.setFixedDelay(5000L);
     jobRepository.save(job);
   }
 }

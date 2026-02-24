@@ -248,7 +248,11 @@ export default function App() {
                 {executionList?.map(execution => {
                   return (
                     <div key={execution.id} className="border max-w-full px-4">
-                      <p className="flex justify-between">{execution.jobName} <span className={execution.message?.includes("Passed!") || execution.message?.includes("successfully") ? "text-green-500 font-extrabold" : "text-red-500 font-extrabold"}> {execution.message}</span></p>
+                      {execution.message ?
+                        <p className="flex justify-between">{execution.jobName} <span className={execution.message?.includes("Passed!") || execution.message?.includes("successfully") ? "text-green-500 font-extrabold" : "text-red-500 font-extrabold"}> {execution.message}</span></p>
+                        :
+                        <p className="flex justify-between">{execution.jobName} <span className={execution.message?.includes("Passed!") || execution.message?.includes("successfully") ? "text-green-500 font-extrabold" : "text-red-500 font-extrabold"}> {execution.errorMessage}</span></p>
+                      }
                     </div>
                   )
                 })}

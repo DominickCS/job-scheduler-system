@@ -24,6 +24,7 @@ public class ScheduleService {
   private final JobRepository jobRepository;
   private final JobExecutorRegistry jExecutorRegistry;
   private final JobExecutionRepository jExecutionRepository;
+  private int jobRetries = 0;
 
   public ScheduleService(JobRepository jobRepository, JobExecutorRegistry jExecutorRegistry,
       JobExecutionRepository jExecutionRepository) {
@@ -32,17 +33,19 @@ public class ScheduleService {
     this.jExecutionRepository = jExecutionRepository;
   }
 
+  // Set job processor to scan for jobs every x ms
   @Scheduled(fixedDelay = 5000)
   @Transactional
   public void processJobs() {
     List<Job> jobsToExecute = jobRepository.findJobsDueForExecution(LocalDateTime.now(), JobStatus.SCHEDULED);
-    System.out.println("Found " + jobsToExecute.size() + " jobs to execute");
+    jobsToExecute.addAll(jobRepository.findJobsDueForExecution(LocalDateTime.now(), JobStatus.FAILED));
+    System.out.println("SCANNING FOR JOBS");
+    System.out.println("JOBS: (" + jobsToExecute.size() + ")");
     System.out.println();
 
     for (Job job : jobsToExecute) {
       System.out.println();
       System.out.println("Executing job: " + job.getJobName());
-      System.out.println("------------------------------------");
       executeJob(job);
     }
   }
@@ -54,6 +57,7 @@ public class ScheduleService {
     job.setJobStatus(JobStatus.RUNNING);
     job.setLastExecution(LocalDateTime.now());
     jobRepository.save(job);
+
     JobExecutorResult result = jExecutorRegistry.getExecutor(job.getJobType()).execute(job);
 
     if (result.isJobSuccessful()) {
@@ -74,22 +78,35 @@ public class ScheduleService {
       jobExecution.setMessage(result.getMessage());
       jExecutionRepository.save(jobExecution);
       jobRepository.save(job);
-      System.out.println("Job: " + job.getJobName() + " ran successfully!");
       System.out.println();
     } else {
-      jobExecution.setEndTime(LocalDateTime.now());
-      jobExecution.setDurationMs(result.getExecutionTimeMs());
-      jobExecution.setStatus(JobExecutionStatus.FAILURE);
-      jobExecution.setErrorMessage(result.getErrorMessage());
-      job.setJobStatus(JobStatus.FAILED);
-      job.setLastErrorMessage(result.getMessage());
-      job.setFailureCounter(job.getFailureCounter() + 1);
-      jExecutionRepository.save(jobExecution);
-      jobRepository.save(job);
-      System.out.println("Job: " + job.getJobName() + " failed to run.");
-      System.out.println();
+      jobRetries += 1;
+      setJobFailed(jobExecution, job, result);
+      if (jobRetries < 3) {
+        System.out.println("JOB EXECUTION FAILED! RETRYING...");
+        System.out.println();
+        executeJob(job);
+      } else {
+        System.out.println("Job: " + job.getJobName() + " failed to run after three (3) retries...");
+        System.out.println("DISABLING JOB!");
+        System.out.println();
+        job.setJobStatus(JobStatus.DISABLED);
+        jobRepository.save(job);
+      }
     }
+  }
 
+  private void setJobFailed(JobExecution jobExecution, Job job, JobExecutorResult result) {
+    jobExecution.setEndTime(LocalDateTime.now());
+    jobExecution.setDurationMs(result.getExecutionTimeMs());
+    jobExecution.setStatus(JobExecutionStatus.FAILURE);
+    jobExecution.setErrorMessage(result.getErrorMessage());
+    jobExecution.setMessage(result.getMessage());
+    job.setJobStatus(JobStatus.FAILED);
+    job.setLastErrorMessage(result.getErrorMessage());
+    job.setFailureCounter(job.getFailureCounter() + 1);
+    jExecutionRepository.save(jobExecution);
+    jobRepository.save(job);
   }
 
   private LocalDateTime calculateNextExecutionTime(Job job) {

@@ -52,7 +52,9 @@ public class EmailNotificationExecutor implements JobExecutor {
       return new JobExecutorResult(true, "Email was sent successfully!", null, executionTime);
 
     } catch (MessagingException messagingException) {
-      return new JobExecutorResult(false, null, "Failed to send email: " + messagingException, 0L);
+      return new JobExecutorResult(false, null, "A message exception occurred: " + messagingException, 0L);
+    } catch (org.springframework.mail.MailException mailException) {
+      return new JobExecutorResult(false, null, "Mail send failed: " + mailException.getMessage(), 0L);
     } catch (JsonProcessingException jsonProcessingException) {
       return new JobExecutorResult(false, null, "Failed to process email parameters: " + jsonProcessingException, 0L);
     }
